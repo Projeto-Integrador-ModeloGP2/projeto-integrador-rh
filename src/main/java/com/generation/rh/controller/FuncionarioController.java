@@ -23,12 +23,12 @@ import com.generation.rh.repository.FuncionarioRepository;
 
 import jakarta.validation.Valid;
 
-@RestController
-@RequestMapping("/funcionarios")
+@RestController // Define ao Spring que essa Classe é uma Controller
+@RequestMapping("/funcionarios") //Define qual endpoint vai ser tratado por essa Classe
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class FuncionarioController {
 
-	@Autowired
+	@Autowired // O spring dá autonomia para a Interface poder invocar os metodos
 	private FuncionarioRepository funcionarioRepository;
 
 	@GetMapping
@@ -36,14 +36,14 @@ public class FuncionarioController {
 		return ResponseEntity.ok(funcionarioRepository.findAll());
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/{id}") //Mapeia todas as requisições HTTP GET, para o endpoint.
 	public ResponseEntity<Funcionario> getByid(@PathVariable Long id) {
 		return funcionarioRepository.findById(id)
-				.map(resposta -> ResponseEntity.ok(resposta))
+				.map(resposta -> ResponseEntity.ok(resposta)) // Estamos usando classe optional(map) para tratar um valor que pode estar ausente, afim de evitar erro null(objeto nulo), caso método findById nao seja encontrado o retorno não pode ser nulo, por isso usamos "Optional(Map)" para que informe se possui dados ou nao.
 				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 	
 	}
-	@GetMapping("/nome/{nome}")
+	@GetMapping("/nome/{nome}") //Mapeia as requisições por "nomes" cadastrados
 	public ResponseEntity<List<Funcionario>> getByNome(@PathVariable String nome) {
 		return ResponseEntity.ok(funcionarioRepository.findAllByNomeContainingIgnoreCase(nome));
 	}
